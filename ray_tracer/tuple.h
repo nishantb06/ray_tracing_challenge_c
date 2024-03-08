@@ -54,6 +54,20 @@ Tuple Add(Tuple t1, Tuple t2)
     return result;
 }
 
+Tuple Subtract(Tuple t1, Tuple t2)
+{
+    if (t1.w == 0.0f && t2.w == 1.0f) {
+        // Raise an error or handle the error condition here
+        // For example, you can print an error message and terminate the program
+        printf("Error: Subtracting a point from a vector is not allowed.\n");
+        exit(1);
+    }
+    Tuple result;
+    init_tuple(&result, t1.x - t2.x, t1.y - t2.y, t1.z - t2.z, t1.w - t2.w);
+
+    return result;
+}
+
 Tuple Point(float x, float y, float z)
 {
     Tuple t;
