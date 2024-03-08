@@ -87,6 +87,33 @@ void ScalerDivide(Tuple* t, float scalar)
     init_tuple(t, t->x / scalar, t->y / scalar, t->z / scalar, t->w / scalar);
 }
 
+float Magnitude(Tuple *t)
+{
+    return sqrtf(t->x * t->x + t->y * t->y + t->z * t->z);
+}
+
+void Nomalize(Tuple *t)
+{
+    float magnitude = Magnitude(t);
+    init_tuple(t, t->x / magnitude, t->y / magnitude, t->z / magnitude, t->w / magnitude);
+}
+
+float DotProduct(Tuple *t1, Tuple *t2)
+{
+    return t1->x * t2->x + t1->y * t2->y + t1->z * t2->z + t1->w * t2->w;
+}
+
+Tuple CrossProduct(Tuple *t1, Tuple *t2)
+{
+    // make sure that the incomig argumenst are vectors
+    Tuple result;
+    init_tuple(&result, t1->y * t2->z - t1->z * t2->y,
+               t1->z * t2->x - t1->x * t2->z,
+               t1->x * t2->y - t1->y * t2->x, 0.0f);
+
+    return result;
+}
+
 Tuple Point(float x, float y, float z)
 {
     Tuple t;

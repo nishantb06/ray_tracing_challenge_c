@@ -119,6 +119,45 @@ void test_scaler_divide() {
 
     printf("test_divide passed\n");
 }
+
+void test_magnitude(){
+    Tuple t1;
+    init_tuple(&t1, 1.0f, 0.0f, 0.0f, 0.0f);
+    assert(Magnitude(&t1) == 1.0f);
+
+    init_tuple(&t1, 0.0f, 1.0f, 0.0f, 0.0f);
+    assert(Magnitude(&t1) == 1.0f);
+
+    init_tuple(&t1, 0.0f, 0.0f, 1.0f, 0.0f);
+    assert(Magnitude(&t1) == 1.0f);
+
+    init_tuple(&t1, 1.0f, 2.0f, 3.0f, 0.0f);
+    assert(fabs(Magnitude(&t1) - sqrt(14.0f)) < 0.0001f);
+
+    init_tuple(&t1, -1.0f, -2.0f, -3.0f, 0.0f);
+    assert(fabs(Magnitude(&t1) - sqrt(14.0f)) < 0.0001f);
+
+    printf("test_magnitude passed\n");
+
+}
+
+void test_dot_product() {
+    Tuple t1 = Vector(1.0f, 2.0f, 3.0f);
+    Tuple t2 = Vector(2.0f, 3.0f, 4.0f);
+    assert(DotProduct(&t1, &t2) == 20.0f);
+
+    printf("test_dot_product passed\n");
+}
+
+void test_cross_product() {
+    Tuple t1 = Vector(1.0f, 2.0f, 3.0f);
+    Tuple t2 = Vector(2.0f, 3.0f, 4.0f);
+    Tuple t3 = CrossProduct(&t1, &t2);
+    assert(equal(t3, Vector(-1.0f, 2.0f, -1.0f)));
+
+    printf("test_cross_product passed\n");
+}
+
 int main() {
     test_is_point();
     test_is_vector();
@@ -131,5 +170,8 @@ int main() {
     test_negate();
     test_scaler_multiply();
     test_scaler_divide();
+    test_magnitude();
+    test_dot_product();
+    test_cross_product();
     return 0;
 }
