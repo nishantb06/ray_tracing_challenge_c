@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+# include <math.h>
 #include <stdio.h>
 
 // Define the Tuple struct
@@ -26,7 +27,9 @@ bool is_point(struct Tuple t)
 
 bool equal(Tuple t1, Tuple t2)
 {
-    return t1.x == t2.x && t1.y == t2.y && t1.z == t2.z && t1.w == t2.w;
+    // only compare the x, y, and z values, see later if you need compare the w value as well.
+    // if absolute value of w is same then return true
+    return (fabs(t1.w) - fabs(t2.w) < 0.00001) && (t1.x == t2.x && t1.y == t2.y && t1.z == t2.z);
 }
 
 // whenever a new object is created call this function to initialize the is_point field
@@ -66,6 +69,22 @@ Tuple Subtract(Tuple t1, Tuple t2)
     init_tuple(&result, t1.x - t2.x, t1.y - t2.y, t1.z - t2.z, t1.w - t2.w);
 
     return result;
+}
+
+void Negate(Tuple* t)
+{
+
+    init_tuple(t, -t->x, -t->y, -t->z, -t->w);
+}
+
+void ScalerMultiply(Tuple* t, float scalar)
+{
+    init_tuple(t, t->x * scalar, t->y * scalar, t->z * scalar, t->w * scalar);
+}
+
+void ScalerDivide(Tuple* t, float scalar)
+{
+    init_tuple(t, t->x / scalar, t->y / scalar, t->z / scalar, t->w / scalar);
 }
 
 Tuple Point(float x, float y, float z)

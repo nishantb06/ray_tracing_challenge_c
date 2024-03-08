@@ -91,6 +91,34 @@ void test_subtract() {
     printf("test_subtract passed\n");
 }
 
+void test_negate() {
+    Tuple t1 = Point(1.0f, -2.0f, 3.0f);
+    Negate(&t1);
+    assert(equal(t1, Point(-1.0f, 2.0f, -3.0f)));
+
+    printf("test_negate passed\n");
+}
+
+void test_scaler_multiply() {
+
+    Tuple t1,output;
+    init_tuple(&output, 3.5f, -7.0f, 10.5f, -14.0f);
+    init_tuple(&t1, 1.0f, -2.0f, 3.0f, 4.0f);
+    ScalerMultiply(&t1, 3.5f);
+    assert(equal(t1, output));
+
+    printf("test_multiply passed\n");
+}
+
+void test_scaler_divide() {
+    Tuple t1,output;
+    init_tuple(&output, 0.5f, -1.0f, 1.5f, -2.0f);
+    init_tuple(&t1, 1.0f, -2.0f, 3.0f, 4.0f);
+    ScalerDivide(&t1, 2.0f);
+    assert(equal(t1, output));
+
+    printf("test_divide passed\n");
+}
 int main() {
     test_is_point();
     test_is_vector();
@@ -100,5 +128,8 @@ int main() {
     test_equal();
     test_add();
     test_subtract();
+    test_negate();
+    test_scaler_multiply();
+    test_scaler_divide();
     return 0;
 }
