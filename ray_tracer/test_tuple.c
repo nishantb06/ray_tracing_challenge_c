@@ -175,3 +175,6 @@ int main() {
     test_cross_product();
     return 0;
 }
+
+// gcc test_tuple.c -o test_tuple
+// ./test_tuple
