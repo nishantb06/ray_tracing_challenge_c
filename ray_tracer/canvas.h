@@ -76,8 +76,10 @@ void WritePixel(Canvas *c, int x, int y, Color color){
 }
 
 // Function to clamp a value within a range
-int clamp(int value, int min, int max)
+int clamp(int value)
 {
+    int min=0;
+    int max=255;
     if (value < min)
     {
         return min;
@@ -108,9 +110,9 @@ char *CanvasToPPM(Canvas *c)
         for (int j = 0; j < c->width; j++)
         {
             // Get color values and clamp to [0, 255]
-            int red = clamp((int)(c->pixels[i][j].red * 255), 0, 255);
-            int green = clamp((int)(c->pixels[i][j].green * 255), 0, 255);
-            int blue = clamp((int)(c->pixels[i][j].blue * 255), 0, 255);
+            int red = clamp((int)(c->pixels[i][j].red * 255));
+            int green = clamp((int)(c->pixels[i][j].green * 255));
+            int blue = clamp((int)(c->pixels[i][j].blue * 255));
 
             // Convert color values to string and append to line buffer
             char color_str[20];
@@ -133,7 +135,7 @@ char *CanvasToPPM(Canvas *c)
     // Append remaining line to PPM string
     strcat(ppm, line);
 
-    printf("PPM:\n%s\n", ppm);
+    printf("PPM:\n%s", ppm);
     return ppm;
 }
 
