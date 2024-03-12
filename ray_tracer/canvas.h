@@ -161,5 +161,29 @@ void PPMToFile(char *ppm, const char *filename)
     fclose(file);
 }
 
+char *CanvasToPPM2(Canvas *c) // Change function name to 'CanvasToPPM2' instead of 'CanvasToPPM'
+{
+    char *ppm = (char *)malloc(100000000); // Increase size of 'ppm' to 1000000
+    if (ppm == NULL)
+    {
+        return NULL;
+    }
+    int index = 0;
+
+    printf("Canvas width: %d\n", c->width);
+    printf("Canvas height: %d\n", c->height);
+
+    index += sprintf(ppm, "P3\n%d %d\n255\n", c->width, c->height);
+    for (int i = 0; i < c->height; i++)
+    {
+        for (int j = 0; j < c->width; j++)
+        {
+            Color pixel = c->pixels[j][i];
+            index += sprintf(ppm + index, "%d %d %d ", clamp((int)(pixel.red * 255)), clamp((int)(pixel.green * 255)), clamp((int)(pixel.blue * 255)));
+        }
+        index += sprintf(ppm + index, "\n");
+    }
+    return ppm;
+}
 
 #endif

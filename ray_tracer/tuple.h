@@ -25,6 +25,7 @@ bool is_point(struct Tuple t)
     return t.w == 1.0f;
 }
 
+
 bool equal(Tuple t1, Tuple t2)
 {
     // only compare the x, y, and z values, see later if you need compare the w value as well.
@@ -92,7 +93,7 @@ float Magnitude(Tuple *t)
     return sqrtf(t->x * t->x + t->y * t->y + t->z * t->z);
 }
 
-void Nomalize(Tuple *t)
+void Normalize(Tuple *t)
 {
     float magnitude = Magnitude(t);
     init_tuple(t, t->x / magnitude, t->y / magnitude, t->z / magnitude, t->w / magnitude);
