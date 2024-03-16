@@ -12,12 +12,16 @@
 // global constants EPSILON
 #define EPSILON 0.00001
 
+//declare DeterminantNew function
+
 typedef struct Matrix
 {   
     int rows;
     int cols;
     float **data;
 } Matrix;
+
+float DeterminantNew(Matrix *m);
 
 Matrix* Matrix_(int rows, int cols)
 {
@@ -79,6 +83,20 @@ bool CompareMatrices(Matrix *a, Matrix *b)
         }
     }
     return true;
+}
+
+void PrintMatrix(Matrix* matrix)
+{
+    // Print the matrix in a readable format
+    for (int i = 0; i < matrix->rows; i++)
+    {   
+        printf("| ");
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            printf("%f | ", matrix->data[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 Matrix* MultiplyMatrices(Matrix *a, Matrix *b)
@@ -169,21 +187,10 @@ float Determinant2x2(Matrix *matrix)
     if (matrix->rows != 2 || matrix->cols != 2)
     {
         printf("Matrix is not 2x2\n");
+        printf("Matrix of size %d x %d\n", matrix->rows, matrix->cols);
         exit(EXIT_FAILURE);
     }
     return matrix->data[0][0] * matrix->data[1][1] - matrix->data[0][1] * matrix->data[1][0];
-}
-
-float Determinant3x3(Matrix *matrix)
-{
-    if (matrix->rows != 3 || matrix->cols != 3)
-    {
-        printf("Matrix is not 3x3\n");
-        exit(EXIT_FAILURE);
-    }
-    return matrix->data[0][0] * (matrix->data[1][1] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][1]) -
-           matrix->data[0][1] * (matrix->data[1][0] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][0]) +
-           matrix->data[0][2] * (matrix->data[1][0] * matrix->data[2][1] - matrix->data[1][1] * matrix->data[2][0]);
 }
 
 Matrix *Submatrix(Matrix *matrix, int row, int col)
@@ -209,6 +216,52 @@ Matrix *Submatrix(Matrix *matrix, int row, int col)
         result_row++;
     }
     return result;
+}
+
+float Minor(Matrix *matrix, int row, int col)
+{
+    return DeterminantNew(Submatrix(matrix, row, col));
+}
+
+float Cofactor(Matrix *matrix, int row, int col)
+{
+    float minor = Minor(matrix, row, col);
+    if ((row + col) % 2 != 0)
+    {
+        return -minor;
+    }
+    return minor;
+}
+
+float DeterminantNew(Matrix* m)
+{
+    if (m->rows != m->cols)
+    {
+        printf("Matrix is not square\n");
+        exit(EXIT_FAILURE);
+    }
+    if (m->rows == 2)
+    {
+        return m->data[0][0] * m->data[1][1] - m->data[0][1] * m->data[1][0];
+    }
+    float sum = 0.0;
+    for (int i = 0; i < m->cols; i++)
+    {
+        sum += m->data[0][i] * Cofactor(m, 0, i);
+    }
+    return sum;
+}
+
+float Determinant3x3(Matrix *matrix)
+{
+    if (matrix->rows != 3 || matrix->cols != 3)
+    {
+        printf("Matrix is not 3x3\n");
+        exit(EXIT_FAILURE);
+    }
+    return matrix->data[0][0] * (matrix->data[1][1] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][1]) -
+           matrix->data[0][1] * (matrix->data[1][0] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][0]) +
+           matrix->data[0][2] * (matrix->data[1][0] * matrix->data[2][1] - matrix->data[1][1] * matrix->data[2][0]);
 }
 
 float Determinant4x4(Matrix *matrix)
@@ -265,6 +318,11 @@ float Determinant(Matrix *matrix)
         printf("Matrix is not 2x2, 3x3 or 4x4\n");
         exit(EXIT_FAILURE);
     }
+}
+
+bool IsInvertible(Matrix *matrix)
+{
+    return Determinant(matrix) != 0;
 }
 
 #endif

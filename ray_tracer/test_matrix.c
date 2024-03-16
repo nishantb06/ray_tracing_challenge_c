@@ -190,6 +190,162 @@ void test_transpose_matrix()
 
 }
 
+void test_submatrix()
+{
+    float numbers[16] = {
+        1, 5, 0,
+        -3, 2, 7,
+        0, 6, -3
+    };
+    Matrix *m = Matrix_(3, 3);
+    SetMatrixValues(m, numbers);
+
+    float result[4] = {
+        -3, 2,
+        0, 6
+    };
+    Matrix *expected = Matrix_(2, 2);
+    SetMatrixValues(expected, result);
+
+    Matrix *m2 = Submatrix(m, 0, 2);
+    assert(m2->rows == 2);
+    assert(m2->cols == 2);
+    for (int i = 0; i < m2->rows; i++)
+    {
+        for (int j = 0; j < m2->cols; j++)
+        {
+            assert(fabs(m2->data[i][j] - expected->data[i][j]) < EPSILON);
+        }
+    }
+    assert(CompareMatrices(m2, expected));
+    printf("test_submatrix passed\n");
+
+    float numbers2[16] = {
+        1, 5, 0, 1,
+        -3, 2, 7, 2,
+        0, 6, -3, 3,
+        1, 2, 3, 4
+    };
+    Matrix *m3 = Matrix_(4, 4);
+    SetMatrixValues(m3, numbers2);
+
+    float result2[9] = {
+        -3, 2, 7,
+        0, 6, -3,
+        1, 2, 3
+    };
+    Matrix *expected2 = Matrix_(3, 3);
+    SetMatrixValues(expected2, result2);
+
+    Matrix *m4 = Submatrix(m3, 0, 3);
+    assert(m4->rows == 3);
+    assert(m4->cols == 3);
+    for (int i = 0; i < m4->rows; i++)
+    {
+        for (int j = 0; j < m4->cols; j++)
+        {
+            assert(fabs(m4->data[i][j] - expected2->data[i][j]) < EPSILON);
+        }
+    }
+    assert(CompareMatrices(m4, expected2));
+    printf("test_submatrix2 passed\n");
+}
+
+void test_minor()
+{
+    float numbers[16] = {
+        3, 5, 0,
+        2, -1, -7,
+        6, -1, 5
+    };
+    Matrix *m = Matrix_(3, 3);
+    SetMatrixValues(m, numbers);
+    Matrix *m2 = Submatrix(m, 1, 0);
+    assert(Determinant(m2) == 25);
+    assert(Minor(m, 1, 0) == 25);
+    printf("test_minor passed\n");
+}
+
+void test_cofactor()
+{
+    float numbers[16] = {
+        3, 5, 0,
+        2, -1, -7,
+        6, -1, 5
+    };
+    Matrix *m = Matrix_(3, 3);
+    SetMatrixValues(m, numbers);
+    assert(Minor(m, 0, 0) == -12);
+    assert(Cofactor(m, 0, 0) == -12);
+    assert(Minor(m, 1, 0) == 25);
+    assert(Cofactor(m, 1, 0) == -25);
+    printf("test_cofactor passed\n");
+
+}
+
+void test_determinant_of_larger_matrices()
+{
+    float numbers[16] = {
+        1, 2, 6,
+        -5, 8, -4,
+        2, 6, 4};
+    Matrix *m = Matrix_(3, 3);
+    SetMatrixValues(m, numbers);
+    assert(Cofactor(m, 0, 0) == 56);
+    assert(Cofactor(m, 0, 1) == 12);
+    assert(Cofactor(m, 0, 2) == -46);
+    assert(Determinant(m) == -196);
+
+    printf("test_determinant_of_larger_matrices passed\n");
+
+    float numbers2[16] = {
+        -2, -8, 3, 5,
+        -3, 1, 7, 3,
+        1, 2, -9, 6,
+        -6, 7, 7, -9
+    };
+    Matrix *m2 = Matrix_(4, 4);
+    SetMatrixValues(m2, numbers2);
+    assert(Cofactor(m2, 0, 0) == 690);
+    assert(Cofactor(m2, 0, 1) == 447);
+    assert(Cofactor(m2, 0, 2) == 210);
+    assert(Cofactor(m2, 0, 3) == 51);
+    assert(Determinant(m2) == -4071);
+    printf("test_determinant_of_larger_matrices2 passed\n");
+}
+
+void test_determinant_new()
+{
+    
+    float numbers[4] = {
+        1, 5,
+        -3, 2};
+    Matrix *m = Matrix_(2, 2);
+    SetMatrixValues(m, numbers);
+    assert(DeterminantNew(m) == 17);
+    printf("test_determinant_new2 passed\n");
+
+    float numbers2[9] = {
+        1, 2, 6,
+        -5, 8, -4,
+        2, 6, 4};
+    Matrix *m2 = Matrix_(3, 3);
+    SetMatrixValues(m2, numbers2);
+    assert(DeterminantNew(m2) == -196);
+    printf("test_determinant_new3 passed\n");
+
+    float numbers3[16] = {
+        -2, -8, 3, 5,
+        -3, 1, 7, 3,
+        1, 2, -9, 6,
+        -6, 7, 7, -9
+    };
+    Matrix *m3 = Matrix_(4, 4);
+    SetMatrixValues(m3, numbers3);
+    assert(DeterminantNew(m3) == -4071);
+    printf("test_determinant_new4 passed\n");
+}
+
 void test_determinant()
 {
     float numbers[16] = {
@@ -220,12 +376,45 @@ void test_determinant()
     printf("test_determinant4 passed\n");
 }
 
+void test_invertible(){
+    float numbers[16] = {
+        6, 4, 4, 4,
+        5, 5, 7, 6,
+        4, -9, 3, -7,
+        9, 1, 7, -6
+    };
+    Matrix *m = Matrix_(4, 4);
+    SetMatrixValues(m, numbers);
+    assert(Determinant(m) == -2120);
+    assert(IsInvertible(m));
+    printf("test_invertible passed\n");
+
+    float numbers2[16] = {
+        -4, 2, -2, -3,
+        9, 6, 2, 6,
+        0, -5, 1, -5,
+        0, 0, 0, 0
+    };
+    Matrix *m2 = Matrix_(4, 4);
+    SetMatrixValues(m2, numbers2);
+    assert(Determinant(m2) == 0);
+    assert(!IsInvertible(m2));
+    printf("test_invertible2 passed\n");
+
+}
+
 int main () {
     test_matrix();
     test_multiply_matrix();
     test_multiply_matrix_tuple();
     test_identity_matrix();
     test_transpose_matrix();
+    test_submatrix();
+    test_minor();
+    test_cofactor();
+    test_determinant_of_larger_matrices();
+    test_determinant_new(); 
     test_determinant();
+    test_invertible();
     return 0;
 }
