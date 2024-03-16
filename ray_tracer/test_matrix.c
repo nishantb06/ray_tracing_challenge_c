@@ -403,6 +403,63 @@ void test_invertible(){
 
 }
 
+void test_inverse()
+{
+    float numbers[16] = {
+        -5, 2, 6, -8,
+        1, -5, 1, 8,
+        7, 7, -6, -7,
+        1, -3, 7, 4
+    };
+    Matrix *m = Matrix_(4, 4);
+    SetMatrixValues(m, numbers);
+    Matrix *m2 = Inverse(m);
+    assert(Determinant(m) == 532);
+    assert(Cofactor(m, 2, 3) == -160);
+    assert(m2->data[3][2] == -160.0f / 532.0f);
+    assert(Cofactor(m, 3, 2) == 105);
+    assert(m2->data[2][3] == 105.0f / 532);
+
+    Matrix *expected = Matrix_(4, 4);
+    expected = Matrix_(4, 4);
+    float result_nums[16] = {
+        0.21805, 0.45113, 0.24060, -0.04511,
+        -0.80827, -1.45677, -0.44361, 0.52068,
+        -0.07895, -0.22368, -0.05263, 0.19737,
+        -0.52256, -0.8139, -0.30075, 0.30639
+    };
+    SetMatrixValues(expected, result_nums);
+
+    assert(CompareMatrices(m2, expected));
+    printf("test_inverse passed\n");
+}
+
+void test_invererse_rule()
+{
+    float numbers[16] = {
+        3, -9, 7, 3,
+        3, -8, 2, -9,
+        -4, 4, 4, 1,
+        -6, 5, -1, 1
+    };
+    Matrix *a = Matrix_(4, 4);
+    SetMatrixValues(a, numbers);
+    float numbers2[16] = {
+        8, 2, 2, 2,
+        3, -1, 7, 0,
+        7, 0, 5, 4,
+        6, -2, 0, 5
+    };
+    Matrix *b = Matrix_(4, 4);
+    SetMatrixValues(b, numbers2);
+    Matrix *c = MultiplyMatrices(a, b);
+    Matrix *b_i = Inverse(b);
+    Matrix *m5 = MultiplyMatrices(c, b_i);
+    assert(CompareMatrices(m5, a));
+    printf("test_invererse_rule passed\n");
+
+}
+
 int main () {
     test_matrix();
     test_multiply_matrix();
@@ -416,5 +473,7 @@ int main () {
     test_determinant_new(); 
     test_determinant();
     test_invertible();
+    test_inverse();
+    test_invererse_rule();
     return 0;
 }

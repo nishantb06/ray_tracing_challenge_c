@@ -325,4 +325,24 @@ bool IsInvertible(Matrix *matrix)
     return Determinant(matrix) != 0;
 }
 
+Matrix* Inverse(Matrix *matrix)
+{
+    if (!IsInvertible(matrix))
+    {
+        printf("Matrix is not invertible\n");
+        exit(EXIT_FAILURE);
+    }
+    Matrix *result = Matrix_(matrix->rows, matrix->cols);
+    float det = Determinant(matrix);
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            float c = Cofactor(matrix, i, j);
+            result->data[j][i] = c / det;
+        }
+    }
+    return result;
+}
+
 #endif
