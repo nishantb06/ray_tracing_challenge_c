@@ -1,2 +1,5 @@
 ray_tracer/*.ppm
 ray_tracer/*.out
+images
+images/*.ppm
+bin
