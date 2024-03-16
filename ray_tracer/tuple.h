@@ -17,6 +17,8 @@ typedef struct Tuple
     float w; // 1 for point, 0 for vector
     bool (*is_point)(struct Tuple);
     bool (*equal)(struct Tuple, struct Tuple);
+
+    float data[4];
 } Tuple;
 
 // Function to check if the tuple is a point
@@ -30,7 +32,7 @@ bool equal(Tuple t1, Tuple t2)
 {
     // only compare the x, y, and z values, see later if you need compare the w value as well.
     // if absolute value of w is same then return true
-    return (fabs(t1.w) - fabs(t2.w) < 0.00001) && (t1.x == t2.x && t1.y == t2.y && t1.z == t2.z);
+    return (fabs(fabs(t1.w) - fabs(t2.w)) < 0.00001) && (t1.x == t2.x && t1.y == t2.y && t1.z == t2.z);
 }
 
 // whenever a new object is created call this function to initialize the is_point field
@@ -42,6 +44,10 @@ void init_tuple(Tuple *t, float x, float y, float z, float w)
     t->w = w;
     t->is_point = is_point;
     t->equal = equal;
+    t->data[0] = x;
+    t->data[1] = y;
+    t->data[2] = z;
+    t->data[3] = w;
 }
 
 Tuple Add(Tuple t1, Tuple t2)

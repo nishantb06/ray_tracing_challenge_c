@@ -47,6 +47,21 @@ Matrix* Matrix_(int rows, int cols)
     return matrix;
 }
 
+void SetMatrixValues(Matrix *matrix, float *values)
+{   
+    // length of the values array should be equal to the number of elements in the matrixs
+
+    int k = 0;
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = values[k];
+            k++;
+        }
+    }
+}
+
 bool CompareMatrices(Matrix *a, Matrix *b)
 {
     if (a->rows != b->rows || a->cols != b->cols)
@@ -97,7 +112,7 @@ Matrix* MultiplyMatrices(Matrix *a, Matrix *b)
     return result;
 }
 
-Matrix* MultiplyMatrixByTuple(Matrix *a, Tuple *b)
+Tuple* MultiplyMatrixByTuple(Matrix *a, Tuple *b)
 {
     // Check if the matrix and tuple can be multiplied
     if (a->cols != 4)
@@ -107,7 +122,8 @@ Matrix* MultiplyMatrixByTuple(Matrix *a, Tuple *b)
     }
 
     // Create a result tuple
-    Tuple *result = Tuple_(0, 0, 0, 0);
+    Tuple *result = (Tuple *)malloc(sizeof(Tuple));
+    init_tuple(result, 0.0f, 0.0f, 0.0f, 0.0f);
 
     // Multiply the matrix and tuple
     for (int i = 0; i < a->rows; i++)
@@ -119,8 +135,136 @@ Matrix* MultiplyMatrixByTuple(Matrix *a, Tuple *b)
         }
         result->data[i] = sum;
     }
+    init_tuple(result, result->data[0], result->data[1], result->data[2], result->data[3]);
 
     return result;
+
+}
+
+Matrix* IdentityMatrix(int size)
+{
+    Matrix *matrix = Matrix_(size, size);
+    for (int i = 0; i < size; i++)
+    {
+        matrix->data[i][i] = 1.0f;
+    }
+    return matrix;
+}
+
+Matrix* TransposeMatrix(Matrix *matrix)
+{
+    Matrix *result = Matrix_(matrix->cols, matrix->rows);
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            result->data[j][i] = matrix->data[i][j];
+        }
+    }
+    return result;
+}
+
+float Determinant2x2(Matrix *matrix)
+{
+    if (matrix->rows != 2 || matrix->cols != 2)
+    {
+        printf("Matrix is not 2x2\n");
+        exit(EXIT_FAILURE);
+    }
+    return matrix->data[0][0] * matrix->data[1][1] - matrix->data[0][1] * matrix->data[1][0];
+}
+
+float Determinant3x3(Matrix *matrix)
+{
+    if (matrix->rows != 3 || matrix->cols != 3)
+    {
+        printf("Matrix is not 3x3\n");
+        exit(EXIT_FAILURE);
+    }
+    return matrix->data[0][0] * (matrix->data[1][1] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][1]) -
+           matrix->data[0][1] * (matrix->data[1][0] * matrix->data[2][2] - matrix->data[1][2] * matrix->data[2][0]) +
+           matrix->data[0][2] * (matrix->data[1][0] * matrix->data[2][1] - matrix->data[1][1] * matrix->data[2][0]);
+}
+
+Matrix *Submatrix(Matrix *matrix, int row, int col)
+{
+    Matrix *result = Matrix_(matrix->rows - 1, matrix->cols - 1);
+    int result_row = 0;
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        if (i == row)
+        {
+            continue;
+        }
+        int result_col = 0;
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            if (j == col)
+            {
+                continue;
+            }
+            result->data[result_row][result_col] = matrix->data[i][j];
+            result_col++;
+        }
+        result_row++;
+    }
+    return result;
+}
+
+float Determinant4x4(Matrix *matrix)
+{
+    if (matrix->rows != 4 || matrix->cols != 4)
+    {
+        printf("Matrix is not 4x4\n");
+        exit(EXIT_FAILURE);
+    }
+    float a = matrix->data[0][0];
+    float b = matrix->data[0][1];
+    float c = matrix->data[0][2];
+    float d = matrix->data[0][3];
+    float e = matrix->data[1][0];
+    float f = matrix->data[1][1];
+    float g = matrix->data[1][2];
+    float h = matrix->data[1][3];
+    float i = matrix->data[2][0];
+    float j = matrix->data[2][1];
+    float k = matrix->data[2][2];
+    float l = matrix->data[2][3];
+    float m = matrix->data[3][0];
+    float n = matrix->data[3][1];
+    float o = matrix->data[3][2];
+    float p = matrix->data[3][3];
+
+    return a * Determinant3x3(Submatrix(matrix, 0, 0)) - b * Determinant3x3(Submatrix(matrix, 0, 1)) +
+           c * Determinant3x3(Submatrix(matrix, 0, 2)) - d * Determinant3x3(Submatrix(matrix, 0, 3));
+}
+
+float Determinant(Matrix *matrix)
+{
+    if (matrix->rows != matrix->cols)
+    {
+        printf("Matrix is not square");
+        exit(EXIT_FAILURE);
+    }
+    if (matrix->rows == 2)
+    {
+        return Determinant2x2(matrix);
+    }
+
+    if (matrix->rows == 3)
+    {
+        return Determinant3x3(matrix);
+    }
+
+    if (matrix->rows == 4)
+    {
+        return Determinant4x4(matrix);
+    }
+
+    else {
+        printf("Matrix is not 2x2, 3x3 or 4x4\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 #endif
