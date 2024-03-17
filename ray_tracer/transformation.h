@@ -26,5 +26,14 @@ Matrix* Translation(float x, float y, float z) {
     return translation;
 }
 
+Matrix* Scaling(float x, float y, float z) {
+    Matrix* scaling = Matrix_(4, 4);
+    scaling->data[0][0] = x;
+    scaling->data[1][1] = y;
+    scaling->data[2][2] = z;
+    scaling->data[3][3] = 1;
+    return scaling;
+}
+
 
 #endif // TRANSFORMATION_H
