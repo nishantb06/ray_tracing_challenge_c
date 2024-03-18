@@ -127,6 +127,8 @@ void test_rotation_z()
 
 }
 
+
+
 void test_shearing()
 {
     Matrix *transform = Shearing(1, 0, 0, 0, 0, 0);
@@ -172,6 +174,26 @@ void test_shearing()
     printf("Test shearing 6 passed\n");
 }
 
+void test_chaining_transformations()
+{
+    Tuple p = Point(1, 0, 1);
+    Matrix *A = RotationX(M_PI / 2);
+    Matrix *B = Scaling(5, 5, 5);
+    Matrix *C = Translation(10, 5, 7);
+    Tuple *p2 = MultiplyMatrixByTuple(A, &p);
+    Tuple *p3 = MultiplyMatrixByTuple(B, p2);
+    Tuple *p4 = MultiplyMatrixByTuple(C, p3);
+    Tuple expected = Point(15, 0, 7);
+    assert(equal(*p4, expected));
+    printf("Test chaining transformations passed\n");
+
+    // test chaining transformations in reverse order
+    Matrix *T = MultiplyMatrices(C, MultiplyMatrices(B, A));
+    Tuple *p5 = MultiplyMatrixByTuple(T, &p);
+    assert(equal(*p5, expected));
+    printf("Test chaining transformations in reverse order passed\n");
+}
+
 int main()
 {
     test_translation();
@@ -180,5 +202,6 @@ int main()
     test_rotation_y();
     test_rotation_z();
     test_shearing();
+    test_chaining_transformations();
     return 0;
 }
