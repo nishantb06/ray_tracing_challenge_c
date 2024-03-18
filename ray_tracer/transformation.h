@@ -35,5 +35,60 @@ Matrix* Scaling(float x, float y, float z) {
     return scaling;
 }
 
+Matrix* RotationX(float r)
+{
+    // r = radians
+    Matrix* rotation = Matrix_(4, 4);
+    rotation->data[0][0] = 1;
+    rotation->data[1][1] = cos(r);
+    rotation->data[1][2] = -sin(r);
+    rotation->data[2][1] = sin(r);
+    rotation->data[2][2] = cos(r);
+    rotation->data[3][3] = 1;
+    return rotation;
+}
+
+Matrix* RotationY(float r)
+{
+    // r = radians
+    Matrix* rotation = Matrix_(4, 4);
+    rotation->data[0][0] = cos(r);
+    rotation->data[0][2] = sin(r);
+    rotation->data[1][1] = 1;
+    rotation->data[2][0] = -sin(r);
+    rotation->data[2][2] = cos(r);
+    rotation->data[3][3] = 1;
+    return rotation;
+}
+
+Matrix* RotationZ(float r)
+{
+    // r = radians
+    Matrix* rotation = Matrix_(4, 4);
+    rotation->data[0][0] = cos(r);
+    rotation->data[0][1] = -sin(r);
+    rotation->data[1][0] = sin(r);
+    rotation->data[1][1] = cos(r);
+    rotation->data[2][2] = 1;
+    rotation->data[3][3] = 1;
+    return rotation;
+}
+
+Matrix* Shearing(float xy, float xz, float yx, float yz, float zx, float zy)
+{
+    Matrix* shearing = Matrix_(4, 4);
+    shearing->data[0][0] = 1;
+    shearing->data[0][1] = xy;
+    shearing->data[0][2] = xz;
+    shearing->data[1][0] = yx;
+    shearing->data[1][1] = 1;
+    shearing->data[1][2] = yz;
+    shearing->data[2][0] = zx;
+    shearing->data[2][1] = zy;
+    shearing->data[2][2] = 1;
+    shearing->data[3][3] = 1;
+    return shearing;
+}
+
 
 #endif // TRANSFORMATION_H
