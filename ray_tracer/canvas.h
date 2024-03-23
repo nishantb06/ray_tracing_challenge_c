@@ -72,6 +72,11 @@ Canvas Canvas_(int width, int height){
 }
 
 void WritePixel(Canvas *c, int x, int y, Color color){
+    // check if the x and y are within the canvas
+    if(x < 0 || x >= c->width || y < 0 || y >= c->height){
+        printf("Error: Pixel out of bounds\n");
+        return;
+    }
     c->pixels[x][y] = color;
 }
 
@@ -163,7 +168,7 @@ void PPMToFile(char *ppm, const char *filename)
 
 char *CanvasToPPM2(Canvas *c) // Change function name to 'CanvasToPPM2' instead of 'CanvasToPPM'
 {
-    char *ppm = (char *)malloc(100000000); // Increase size of 'ppm' to 1000000
+    char *ppm = (char *)malloc(1000000000); // Increase size of 'ppm' to 1000000
     if (ppm == NULL)
     {
         return NULL;
