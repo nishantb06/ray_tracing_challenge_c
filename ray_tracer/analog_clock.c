@@ -18,6 +18,7 @@ int main()
     Tuple origin = Point(0, 0, 0);
     int radius = 300;
     int hours = 12;
+
     // translate the origin to the center of the canvas
     Matrix *translate = Translation(400, 400, 0);
     Tuple *center = MultiplyMatrixByTuple(translate, &origin);
@@ -25,14 +26,16 @@ int main()
     int y = c.height - (int)center->y;
     printf("x: %d, y: %d\n", x, y);
     WritePixel(&c, x, y, white);
+
+    // draw the clock face
     Matrix* translate2 = Translation(0, 300, 0);
     Tuple *twelve = MultiplyMatrixByTuple(translate2, &origin);
     Tuple *twelve2 = MultiplyMatrixByTuple(translate, twelve);
-    // draw the twelve
     x = (int)twelve2->x; //400
     y = c.height - (int)twelve2->y; //100
     printf("x: %d, y: %d\n", x, y);
     WritePixel(&c, x, y, white);
+
     // get all the other points by rotating the point 30 degrees along the z axis
     for (int i = 1; i < hours; i++)
     {
@@ -42,15 +45,8 @@ int main()
         int x = (int)point->x;
         int y = c.height - (int)point->y;
         printf("x: %d, y: %d\n", x, y);
-        WritePixel(&c, x, y, white);
+        WritePixel(&c, x, y, red);
     }
-    // translate twelve 400,-400,0
-    // draw the twelve
-    // Matrix *translate2 = Translation(400, -400, 0);
-    // Tuple *twelve2 = MultiplyMatrixByTuple(translate2, twelve);
-    // int x = (int)twelve2->x;
-    // int y = c.height + (int)twelve2->y;
-    // WritePixel(&c, x, y, white);
 
     char *ppm = CanvasToPPM2(&c);
     if (ppm == NULL)

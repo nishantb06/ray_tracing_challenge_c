@@ -96,6 +96,19 @@ int clamp(int value)
     return value;
 }
 
+void DestroyCanvas(Canvas *canvas)
+{
+    if (canvas == NULL)
+        return;
+
+    for (int i = 0; i < canvas->height; i++)
+    {
+        free(canvas->pixels[i]);
+    }
+    free(canvas->pixels);
+    free(canvas);
+}
+
 // Function to convert a Canvas to a PPM string
 char *CanvasToPPM(Canvas *c)
 {
