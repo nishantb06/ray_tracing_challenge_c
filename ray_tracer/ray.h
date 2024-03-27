@@ -142,6 +142,33 @@ Intersections* Intersect(Sphere s, Ray r)
     return i; 
 }
 
+Intersection* Hit(Intersections* i)
+{
+    if(i->count == 0)
+    {
+        return NULL;
+    }
+    Intersection* hit = (Intersection*)malloc(sizeof(Intersection));
+    float min = 1000000;
+    for(int j=0; j<i->count; j++)
+    {
+        if(i->solutions[j].t < min && i->solutions[j].t > 0)
+        {
+            min = i->solutions[j].t;
+            *hit = i->solutions[j];
+        }
+        else
+        {
+            continue;
+        }
+    }
+    if (min == 1000000 || min < 0)
+    {
+        return NULL;
+    }
+    return hit;
+}
+
 
 
 

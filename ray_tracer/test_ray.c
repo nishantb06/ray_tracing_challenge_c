@@ -70,7 +70,7 @@ void test_intersecting_ray_with_sphere()
 
 }
 
-void test_intersection()
+void test_intersections_and_hit()
 {
     Sphere s = Sphere_(1, 1);
     Intersection* i0 = Intersection_(3.5, s);
@@ -94,6 +94,49 @@ void test_intersection()
     free(i);
     printf("Test intersections 2 passed\n");
 
+    Intersection* i3 = Intersection_(1, s);
+    Intersection* i4 = Intersection_(2, s);
+    Intersection* i5 = Intersection_(-1, s);
+    Intersection* i6 = Intersection_(-2, s);
+    Intersection* i7 = Intersection_(5, s);
+    Intersection* i8 = Intersection_(7, s);
+    Intersection* i9 = Intersection_(-3, s);
+    Intersection* i10 = Intersection_(2, s);
+
+    Intersection* iarr1 = (Intersection*)malloc(sizeof(Intersection)*2);
+    iarr1[0] = *i3;
+    iarr1[1] = *i4;
+    Intersections* xs1 = Intersections__(2, iarr1);
+    Intersection* hit1 = Hit(xs1);
+    assert(hit1->t == 1);
+    printf("Test hit 1 passed\n");
+
+    Intersection* iarr2 = (Intersection*)malloc(sizeof(Intersection)*2);
+    iarr2[0] = *i5;
+    iarr2[1] = *i3;
+    Intersections* xs2 = Intersections__(2, iarr2);
+    Intersection* hit2 = Hit(xs2);
+    assert(hit2->t == 1);
+    printf("Test hit 2 passed\n");
+
+    Intersection* iarr3 = (Intersection*)malloc(sizeof(Intersection)*2);
+    iarr3[0] = *i5;
+    iarr3[1] = *i6;
+    Intersections* xs3 = Intersections__(2, iarr3);
+    Intersection* hit3 = Hit(xs3);
+    assert(hit3 == NULL);
+    printf("Test hit 3 passed\n");
+
+    Intersection* iarr4 = (Intersection*)malloc(sizeof(Intersection)*4);
+    iarr4[0] = *i7;
+    iarr4[1] = *i8;
+    iarr4[2] = *i9;
+    iarr4[3] = *i10;
+    Intersections* xs4 = Intersections__(4, iarr4);
+    Intersection* hit4 = Hit(xs4);
+    assert(hit4->t == 2);
+    printf("Test hit 4 passed\n");
+
 }
 
 
@@ -101,6 +144,6 @@ int main ()
 {
     test_ray();
     test_intersecting_ray_with_sphere();
-    test_intersection();
+    test_intersections_and_hit();
     return 0;
 }
