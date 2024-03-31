@@ -178,6 +178,39 @@ void test_transforms()
     printf("Test intersecting a scaled sphere with a ray passed\n");
 }
 
+void test_normal()
+{
+    Sphere s = Sphere_(1, 1);
+    Tuple* n = NormalAt(s, Point(1, 0, 0));
+    assert(equal(*n, Vector(1, 0, 0)));
+    n = NormalAt(s, Point(0, 1, 0));
+    assert(equal(*n, Vector(0, 1, 0)));
+    n = NormalAt(s, Point(0, 0, 1));
+    assert(equal(*n, Vector(0, 0, 1)));
+    n = NormalAt(s, Point(sqrt(3)/3, sqrt(3)/3, sqrt(3)/3));
+    assert(equal(*n, Vector(sqrt(3)/3, sqrt(3)/3, sqrt(3)/3)));
+    n = NormalAt(s, Point(-sqrt(3)/3, -sqrt(3)/3, -sqrt(3)/3));
+    assert(equal(*n, Vector(-sqrt(3)/3, -sqrt(3)/3, -sqrt(3)/3)));
+    printf("Test normal passed\n");
+
+    // Computing the normal on a translated sphere
+    Matrix* t = Translation(0, 1, 0);
+    SetTransform(&s, t);
+    n = NormalAt(s, Point(0, 1.70711, -0.70711));
+    assert(equal(*n, Vector(0, 0.70711, -0.70711)));
+    printf("Test normal on translated sphere passed\n");
+
+    // Computing the normal on a transformed sphere
+    Matrix* s1 = Scaling(1, 0.5, 1);
+    Matrix* r = RotationZ(M_PI/5);
+    Matrix* t1 = MultiplyMatrices(s1, r);
+    SetTransform(&s, t1);
+    n = NormalAt(s, Point(0, sqrt(2)/2, -sqrt(2)/2));
+    assert(equal(*n, Vector(0, 0.97014, -0.24254)));
+    printf("Test normal on transformed sphere passed\n");
+
+}
+
 
 
 int main ()
@@ -186,5 +219,6 @@ int main ()
     test_intersecting_ray_with_sphere();
     test_intersections_and_hit();
     test_transforms();
+    test_normal();
     return 0;
 }

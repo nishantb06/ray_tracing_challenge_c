@@ -41,6 +41,16 @@ Sphere Sphere_(float radius, float id)
     return s;
 }
 
+Tuple* NormalAt(Sphere s, Tuple world_point)
+{
+    Tuple *object_point = MultiplyMatrixByTuple(Inverse(s.transform), &world_point);
+    Tuple object_normal = Subtract(*object_point, Point(0, 0, 0));
+    Tuple *world_normal = MultiplyMatrixByTuple(TransposeMatrix(Inverse(s.transform)), &object_normal);
+    world_normal->w = 0;
+    Normalize(world_normal);
+    return world_normal;
+}
+
 void SetTransform(Sphere *s, Matrix *m)
 {
     s->transform = m;
