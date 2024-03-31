@@ -211,7 +211,23 @@ void test_normal()
 
 }
 
+void test_reflection()
+{
+    // Reflecting a vector approaching at 45 degrees
+    Tuple v = Vector(1, -1, 0);
+    Tuple n = Vector(0, 1, 0);
+    Tuple r = Reflect(&v, &n);
+    assert(equal(r, Vector(1, 1, 0)));
+    printf("Test reflecting a vector approaching at 45 degrees passed\n");
 
+    // Reflecting a vector off a slanted surface
+    v = Vector(0, -1, 0);
+    n = Vector(sqrt(2)/2, sqrt(2)/2, 0);
+    r = Reflect(&v, &n);
+    assert(equal(r, Vector(1, 0, 0)));
+    printf("Test reflecting a vector off a slanted surface passed\n");
+
+}
 
 int main ()
 {
@@ -220,5 +236,6 @@ int main ()
     test_intersections_and_hit();
     test_transforms();
     test_normal();
+    test_reflection();
     return 0;
 }
