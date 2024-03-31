@@ -10,7 +10,7 @@
 
 int main()
 {
-    Canvas c = Canvas_(100, 100);
+    Canvas c = Canvas_(1000, 1000);
     Color red = Color_(1, 0, 0);
     Sphere s = Sphere_(1, 1);
     // Apply a shearing and scaling transformation to the sphere
