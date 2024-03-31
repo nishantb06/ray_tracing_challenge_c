@@ -139,11 +139,52 @@ void test_intersections_and_hit()
 
 }
 
+void test_transforms()
+{
+    // translating a ray
+    Ray r = Ray_(Point(1, 2, 3), Vector(0, 1, 0));
+    Matrix* translate = Translation(3, 4, 5);
+    Ray r2 = Transform(r, translate);
+    assert(equal(r2.origin, Point(4, 6, 8)));
+    assert(equal(r2.direction, Vector(0, 1, 0)));
+    printf("Test translating a ray passed\n");
+
+    // scaling a ray
+    Ray r3 = Ray_(Point(1, 2, 3), Vector(0, 1, 0));
+    Matrix* scale = Scaling(2, 3, 4);
+    Ray r4 = Transform(r3, scale);
+    assert(equal(r4.origin, Point(2, 6, 12)));
+    assert(equal(r4.direction, Vector(0, 3, 0)));
+    printf("Test scaling a ray passed\n");
+
+    // a spheres default transformation
+    Sphere s = Sphere_(1, 1);
+    Matrix* m = s.transform;
+    assert(CompareMatrices(m, IdentityMatrix(4)));
+    printf("Test sphere default transformation passed\n");
+
+    // changing a spheres transformation
+    Matrix* t = Translation(2, 3, 4);
+    SetTransform(&s, t);
+    assert(CompareMatrices(s.transform, t));
+    printf("Test changing a spheres transformation passed\n");
+
+    // intersecting a scaled sphere with a ray
+    Ray r5 = Ray_(Point(0, 0, -5), Vector(0, 0, 1));
+    Sphere s2 = Sphere_(1, 1);
+    SetTransform(&s2, Scaling(2, 2, 2));
+    Intersections* i = Intersect(s2, r5);
+    assert(i->count == 2);
+    printf("Test intersecting a scaled sphere with a ray passed\n");
+}
+
+
 
 int main ()
 {
     test_ray();
     test_intersecting_ray_with_sphere();
     test_intersections_and_hit();
+    test_transforms();
     return 0;
 }

@@ -28,6 +28,7 @@ typedef struct{
     float radius;
     Tuple center;
     float id;
+    Matrix *transform;
 } Sphere;
 
 Sphere Sphere_(float radius, float id)
@@ -36,7 +37,13 @@ Sphere Sphere_(float radius, float id)
     s.center = Point(0, 0, 0);
     s.radius = radius;
     s.id = id;
+    s.transform = IdentityMatrix(4);
     return s;
+}
+
+void SetTransform(Sphere *s, Matrix *m)
+{
+    s->transform = m;
 }
 
 float *Discriminant(Ray r, Sphere s)
@@ -77,15 +84,6 @@ Intersection* Intersection_(float t, Sphere object)
     return i;
 }
 
-// Intersections Intersections_()
-// {
-//     float *solutions = (float *)malloc(sizeof(float) * 2);
-//     Intersections i;
-//     i.solutions = solutions;
-//     i.count = -1;
-//     return i;
-// }
-
 Intersections* Intersections_()
 {
     Intersections* i;
@@ -105,21 +103,40 @@ Intersections* Intersections__(int count, Intersection *i)
     return intersections;
 }
 
-
+Ray Transform(Ray r, Matrix *m)
+{
+    Ray ray;
+    ray.origin = *MultiplyMatrixByTuple(m, &r.origin);
+    ray.direction = *MultiplyMatrixByTuple(m, &r.direction);
+    return ray;
+}
+void PrintRay(Ray r)
+{
+    printf("Origin: ");
+    PrintTuple(r.origin);
+    printf("Direction: ");
+    PrintTuple(r.direction);
+}
 Intersections* Intersect(Sphere s, Ray r)
 {
+    // transform the ray
+    // inverse of the transformation matrix
+    Matrix* m = Inverse(s.transform);
+    Ray r2 = Transform(r, m);
     Intersections* i = Intersections_();
-    float* values = Discriminant(r,s);
+    float* values = Discriminant(r2,s);
     float d = values[3];
     float a = values[0];
     float b = values[1];
     float c = values[2];
+    // printf("a: %f, b: %f, c: %f, d: %f\n", a, b, c, d);
     if(d<0){
         i->count = 0;
         return i;
     }
     float t1 = (-b + sqrt(d)) / (2 * a);
     float t2 = (-b - sqrt(d)) / (2 * a);
+    // printf("t1: %f, t2: %f\n", t1, t2);
     if (t1 >= t2)
     {
         i->count = 2;
