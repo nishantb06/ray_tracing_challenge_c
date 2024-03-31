@@ -4,6 +4,7 @@
 # include "tuple.h"
 # include "matrix.h"
 # include "transformation.h"
+# include "light.h"
 
 typedef struct {
     Tuple origin;
@@ -29,6 +30,7 @@ typedef struct{
     Tuple center;
     float id;
     Matrix *transform;
+    Material* material;
 } Sphere;
 
 Sphere Sphere_(float radius, float id)
@@ -38,6 +40,7 @@ Sphere Sphere_(float radius, float id)
     s.radius = radius;
     s.id = id;
     s.transform = IdentityMatrix(4);
+    s.material = Material_(Color_(1, 1, 1), 0.1, 0.9, 0.9, 200.0);
     return s;
 }
 
@@ -61,6 +64,11 @@ Tuple Reflect(Tuple* in, Tuple* normal)
 void SetTransform(Sphere *s, Matrix *m)
 {
     s->transform = m;
+}
+
+void SetMaterial(Sphere *s, Material *m)
+{
+    s->material = m;
 }
 
 float *Discriminant(Ray r, Sphere s)
