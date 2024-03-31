@@ -27,6 +27,10 @@ bool is_point(struct Tuple t)
     return t.w == 1.0f;
 }
 
+void PrintTuple(Tuple t)
+{
+    printf("x: %f, y: %f, z: %f, w: %f\n", t.x, t.y, t.z, t.w);
+}
 
 bool equal(Tuple t1, Tuple t2)
 {
