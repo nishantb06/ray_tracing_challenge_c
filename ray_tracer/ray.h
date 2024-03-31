@@ -54,13 +54,6 @@ Tuple* NormalAt(Sphere s, Tuple world_point)
     return world_normal;
 }
 
-Tuple Reflect(Tuple* in, Tuple* normal)
-{
-    ScalerMultiply(normal, 2 * DotProduct(in, normal));
-    Tuple result = Subtract(*in, *normal);
-    return result;
-}
-
 void SetTransform(Sphere *s, Matrix *m)
 {
     s->transform = m;

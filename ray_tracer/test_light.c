@@ -19,7 +19,45 @@ void test_light()
     assert(ColorIsEqual(l->intensity, intensity));
     printf("Test light passed\n");
 
+    Material* m = DefaultMaterial();
+    // eye between the light and the surface
+    Tuple eye = Vector(0, 0, -1);
+    Tuple normal = Vector(0, 0, -1);
+    Tuple light_position = Point(0, 0, -10);
+    Color result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(1.9, 1.9, 1.9)));
 
+    // eye between light and surface, eye offset 45 degrees
+    eye = Vector(0, sqrt(2)/2, -sqrt(2)/2);
+    normal = Vector(0, 0, -1);
+    result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(1.0, 1.0, 1.0)));
+
+    // light between eye and surface, eye offset 45 degrees
+    eye = Vector(0, 0, -1);
+    normal = Vector(0, 0, -1);
+    result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(1.0, 1.0, 1.0)));
+
+    // light between eye and surface, eye offset 45 degrees, light offset 45 degrees
+    eye = Vector(0, sqrt(2)/2, -sqrt(2)/2);
+    normal = Vector(0, 0, -1);
+    result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(0.7364, 0.7364, 0.7364)));
+
+    // eye opposite surface, light offset 45 degrees
+    eye = Vector(0, 0, -1);
+    normal = Vector(0, 0, -1);
+    result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(0.1, 0.1, 0.1)));
+
+    // eye in the path of the reflection vector
+    eye = Vector(0, -sqrt(2)/2, -sqrt(2)/2);
+    normal = Vector(0, 0, -1);
+    result = Lighting(m, l, position, eye, normal);
+    assert(ColorIsEqual(result, Color_(1.6364, 1.6364, 1.6364)));
+    
+    printf("Test lighting passed\n");
 }
 
 void test_material()

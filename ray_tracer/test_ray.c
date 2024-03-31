@@ -7,6 +7,7 @@
 #include "matrix.h"
 #include "transformation.h"
 #include "ray.h"
+#include "light.h"
 
 void test_ray()
 {
