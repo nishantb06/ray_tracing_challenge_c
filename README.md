@@ -1,5 +1,5 @@
 # 3D Ray Tracer 
-### Implementation of the Ray tracing challenge book by James Buick
+### Implementation of the Ray tracing challenge book by James Buck
 ![Cover Photo](https://imgs.search.brave.com/X5xKM4UJfU2XEjybw6VG3Lg4q5a3dRdysd4tHjwmbhI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9sZWFy/bmluZy5vcmVpbGx5/LmNvbS9saWJyYXJ5/L2NvdmVyLzk3ODE2/ODA1MDY3NzgvMjUw/dy8)
 ---- 
 
