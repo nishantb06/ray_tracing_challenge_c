@@ -9,6 +9,8 @@
 #include "string.h"
 #include <stdio.h>
 
+# define EPSILON2 0.001   
+
 typedef struct Color {
     float red;
     float green;
@@ -45,8 +47,19 @@ void ScalarDivideColor(Color *a, float b){
     a->blue /= b;
 }
 
+void PrintColor(Color *c)
+{
+    printf("Color: %f %f %f\n", c->red, c->green, c->blue);
+}
+
 bool ColorIsEqual(Color a, Color b){
-    return a.red == b.red && a.green == b.green && a.blue == b.blue;
+    if(fabs(a.red - b.red) < EPSILON2 && fabs(a.green - b.green) < EPSILON2 && fabs(a.blue - b.blue) < EPSILON2){
+        return true;
+    }
+    else{
+        PrintColor(&a);
+        return false;
+    }
 }
 
 typedef struct Canvas {

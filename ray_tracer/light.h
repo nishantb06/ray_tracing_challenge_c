@@ -49,11 +49,16 @@ Tuple Reflect(Tuple *in, Tuple *normal)
     return result;
 }
 
+// The arguments are 
+// 1. the material of the object
+// 2. the light source
+// 3. the point on the object
+// 4. the eye vector
+// 5. the normal vector
 Color Lighting(Material* material, Light* light, Tuple position, Tuple eyev, Tuple normalv)
 {
     // combine the surface color with the light's color/intensity
     Color effective_color = MultiplyColor(material->color, light->intensity);
-
     // find the direction to the light source
     Tuple lightv = Subtract(light->position, position);
     Normalize(&lightv);
@@ -92,9 +97,9 @@ Color Lighting(Material* material, Light* light, Tuple position, Tuple eyev, Tup
             ScalarMultiplyColor(&specular, material->specular * factor);
             return AddColor(AddColor(ambient, diffuse), specular);
         }
-    }
-
-    
+    }   
 }
+
+// Color Lighting2()
 
 #endif // LIGHT_H
