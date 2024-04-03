@@ -15,6 +15,11 @@ int main()
     Sphere s = Sphere_(1, 1);
     s.material = DefaultMaterial();
     s.material->color = Color_(1, 0.2, 1);
+    // Apply a shearing and scaling transformation to the sphere
+    Matrix *shear = Shearing(1, 0, 0, 0, 0, 0);
+    Matrix *scale = Scaling(0.5, 1, 1);
+    Matrix *transform = MultiplyMatrices(shear, scale);
+    SetTransform(&s, transform);
 
     Tuple light_position = Point(-10, 10, -10);
     Color light_color = Color_(1, 1, 1);
