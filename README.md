@@ -12,7 +12,7 @@ Picking this project up to learn
 
 Implementation after chapter 7
 <!-- ![Sphere](ray_tracer/pngs/sphere.png =250x250) -->
-<img src="ray_tracer/pngs/sphere.png" width="250">
+<img src="ray_tracer/pngs/sphere.png" width="500">
 Sphere after applying scaling and shearing transformations
 <!-- ![Transformed Sphere](ray_tracer/pngs/sphere_transformed.png) -->
 <img src="ray_tracer/pngs/sphere_transformed.png" width="500">
