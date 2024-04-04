@@ -3,12 +3,12 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include "tuple.h"
-#include "matrix.h"
-#include "transformation.h"
-#include "ray.h"
-#include "light.h"
-#include "canvas.h"
+#include "../src/tuple.h"
+#include "../src/matrix.h"
+#include "../src/transformation.h"
+#include "../src/ray.h"
+#include "../src/light.h"
+#include "../src/canvas.h"
 
 void test_light()
 {

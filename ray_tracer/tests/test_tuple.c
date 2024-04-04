@@ -1,4 +1,4 @@
-#include "tuple.h"
+#include "../src/tuple.h"
 #include <assert.h>
 #include <stdio.h>
 

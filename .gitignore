@@ -3,3 +3,4 @@ ray_tracer/*.out
 images
 images/*.ppm
 bin
+bin*

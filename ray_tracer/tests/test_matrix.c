@@ -1,10 +1,10 @@
-#include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-#include "tuple.h"
 #include <assert.h>
+#include <math.h>
+#include "../src/tuple.h"
+#include "../src/matrix.h"
 
 // global constants EPSILON
 #define EPSILON 0.00001

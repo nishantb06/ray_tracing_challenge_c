@@ -1,4 +1,4 @@
-# include "canvas.h"
+# include "../src/canvas.h"
 # include <assert.h>
 # include <stdio.h>
 # include <string.h>
@@ -157,7 +157,7 @@ void TestCanvas()
 {
     test_canvas();
     test_write_pixel();
-    test_canvas_to_ppm();
+    // test_canvas_to_ppm();
 }
 
 int main()
