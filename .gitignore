@@ -4,3 +4,4 @@ images
 images/*.ppm
 bin
 bin*
+*.ppm
