@@ -16,3 +16,6 @@ run_tests:
 
 plot_sphere:
 	gcc ray_tracer/plot_sphere.c -o ray_tracer/bin/plot_sphere && ./ray_tracer/bin/plot_sphere 
+
+test_scene:
+	gcc ray_tracer/tests/test_scene.c -o ray_tracer/bin/test_scene && ray_tracer/bin/test_scene

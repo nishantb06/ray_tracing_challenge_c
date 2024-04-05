@@ -21,7 +21,7 @@ int main()
     Matrix *transform = MultiplyMatrices(shear, scale);
     SetTransform(&s, transform);
 
-    Tuple light_position = Point(-5, 5, -10);
+    Tuple light_position = Point(-10, 10, -10);
     Color light_color = Color_(1, 1, 1);
     Light *light = Light_(light_position, light_color);
 

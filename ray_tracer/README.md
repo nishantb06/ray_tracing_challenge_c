@@ -13,3 +13,11 @@
 - the scripts that create visualisations at the end of each chapter in a separete folder
 - Makefile to run tests and sync that with github actions
 - comments for important function, about what they return and accept as arguments
+
+
+-------
+## DEFINITIONS
+
+Sphere Sphere_(float radius, float id)
+World* DefaultWorld()
+Intersections* IntersectWorld(World *world, Ray *ray)

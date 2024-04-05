@@ -114,7 +114,7 @@ Intersections* Intersections__(int count, Intersection *i)
 {
     // count represents the number of intersections
     // i is an array of intersections of size count
-    Intersections* intersections;
+    Intersections* intersections = (Intersections*)malloc(sizeof(Intersections));
     intersections->count = count;
     intersections->solutions = (Intersection*)malloc(sizeof(Intersection)*count);
     intersections->solutions = i;
