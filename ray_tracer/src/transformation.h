@@ -90,5 +90,33 @@ Matrix* Shearing(float xy, float xz, float yx, float yz, float zx, float zy)
     return shearing;
 }
 
+Matrix* ViewTransform(Tuple from, Tuple to, Tuple up)
+{
+    Tuple forward = Subtract(to, from);
+    Normalize(&forward);
+    Tuple upn = up;
+    Normalize(&upn);
+    Tuple left = CrossProduct(&forward ,&upn);
+    Tuple true_up = CrossProduct(&left ,&forward);
+    Matrix* orientation = Matrix_(4, 4);
+    orientation->data[0][0] = left.x;
+    orientation->data[0][1] = left.y;
+    orientation->data[0][2] = left.z;
+    orientation->data[0][3] = 0;
+    orientation->data[1][0] = true_up.x;
+    orientation->data[1][1] = true_up.y;
+    orientation->data[1][2] = true_up.z;
+    orientation->data[1][3] = 0;
+    orientation->data[2][0] = -forward.x;
+    orientation->data[2][1] = -forward.y;
+    orientation->data[2][2] = -forward.z;
+    orientation->data[2][3] = 0;
+    orientation->data[3][0] = 0;
+    orientation->data[3][1] = 0;
+    orientation->data[3][2] = 0;
+    orientation->data[3][3] = 1;
+    Matrix* translation = Translation(-from.x, -from.y, -from.z);
+    return MultiplyMatrices(orientation, translation);
+}
 
 #endif // TRANSFORMATION_H

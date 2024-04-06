@@ -149,4 +149,34 @@ Computation *PrepareComputations(Intersection *intersection, Ray *ray)
     return Computation_(intersection->t, object, point, eyev, *normalv, inside);
 }
 
+Color ShadeHit(World *world, Computation *computation)
+{   
+    Color final_color = Color_(0, 0, 0);
+    Color color = Color_(0, 0, 0);
+    for (int i = 0; i < world->num_lights; i++)
+    {
+        Light light = world->lights[i];
+        color = Lighting(computation->object.material, &light, computation->point, computation->eyev, computation->normalv );
+        final_color = AddColor(final_color, color);
+    }
+    return final_color;
+}
+
+Color ColorAt(World *world, Ray *ray)
+{
+    Intersections *intersections = IntersectWorld(world, ray);
+    if (intersections->count == 0)
+    {
+        return Color_(0, 0, 0);
+    }
+    Intersection* hit = Hit(intersections);
+    if (hit == NULL || hit->t == -1 || hit->t == 0 )
+    {
+        return Color_(0, 0, 0);
+    }
+    Computation *computation = PrepareComputations(hit, ray);
+    return ShadeHit(world, computation);
+}
+
+
 # endif // SCENE_H
