@@ -13,4 +13,10 @@ def convert_ppm_to_png(ppm_file_path, png_file_path):
         img.save(png_file_path, "PNG")
 
 # Example usage
-convert_ppm_to_png("sphere.ppm", "sphere_transformed.png")
+# convert_ppm_to_png("sphere.ppm", "sphere_transformed.png")
+
+if __name__ == "__main__":
+    # take argument as the file name
+    import sys
+    convert_ppm_to_png(sys.argv[1], sys.argv[2])
+    # convert_ppm_to_png("sphere.ppm", "sphere_transformed.png")

@@ -44,6 +44,13 @@ World* DefaultWorld()
     return world;
 }
 
+void AddObject(World* world, Sphere object)
+{
+    world->num_objects++;
+    world->objects = (Sphere*)realloc(world->objects, world->num_objects * sizeof(Sphere));
+    world->objects[world->num_objects - 1] = object;
+}
+
 // Comparator function for qsort
 int compareIntersections(const void *a, const void *b)
 {
@@ -178,5 +185,121 @@ Color ColorAt(World *world, Ray *ray)
     return ShadeHit(world, computation);
 }
 
+// typedef struct {
+//     int vsize;
+//     int hsize;
+//     float fov;
+//     Matrix* transform;
+//     World* world;
+// } Camera;
+
+// Camera* Camera_(int hsize, int vsize, float fov, World* world)
+// {
+//     Camera* camera = (Camera*)malloc(sizeof(Camera));
+//     camera->vsize = vsize;
+//     camera->hsize = hsize;
+//     camera->fov = fov;
+//     camera->world = world;
+//     return camera;
+// }
+
+// Ray RayForPixel(Camera* camera, int px, int py)
+// {
+//     float half_width = camera->vsize / 2;
+//     float half_height = camera->hsize / 2;
+//     float aspect = (float)camera->vsize / camera->hsize;
+//     float xoffset = (px + 0.5) * camera->fov / camera->vsize;
+//     float yoffset = (py + 0.5) * camera->fov / camera->hsize;
+//     float world_x = half_width - px;
+//     float world_y = half_height - py;
+//     Tuple pixel = Point(world_x, world_y, -1);
+//     Tuple origin = Point(0, 0, 0);
+//     Tuple direction =Subtract(pixel, origin);
+//     Normalize(&direction);
+//     return Ray_(origin, direction);
+// }
+
+// Canvas Render(Camera* camera)
+// {
+//     Canvas canvas = Canvas_(camera->vsize, camera->hsize);
+//     for (int y = 0; y < camera->hsize; y++)
+//     {
+//         for (int x = 0; x < camera->vsize; x++)
+//         {
+//             Ray ray = RayForPixel(camera, x, y);
+//             Color color = ColorAt(camera->world, &ray);
+//             WritePixel(&canvas, x, y, color);
+//         }
+//     }
+//     return canvas;
+// }
+
+typedef struct {
+    int vsize;
+    int hsize;
+    float fov;
+    Matrix* transform;
+    float pixel_size;
+    float half_view;
+    float aspect;
+    float half_width;
+    float half_height;
+} Camera;
+
+Camera* Camera_(int hsize, int vsize, float fov)
+{
+    Camera* camera = (Camera*)malloc(sizeof(Camera));
+    camera->vsize = vsize;
+    camera->hsize = hsize;
+    camera->fov = fov;
+    camera->transform = IdentityMatrix(4);
+    float half_view = tan(fov / 2);
+    float aspect = (float)hsize / vsize;
+    if (aspect >= 1)
+    {
+        camera->half_width = half_view;
+        camera->half_height = half_view / aspect;
+    }
+    else
+    {
+        camera->half_width = half_view * aspect;
+        camera->half_height = half_view;
+    }
+
+    camera->pixel_size = (camera->half_width*2)/camera->hsize;
+
+    return camera;
+}
+
+Ray RayForPixel(Camera* camera, int px, int py)
+{
+    float xoffset = (px + 0.5) * camera->pixel_size;
+    float yoffset = (py + 0.5) * camera->pixel_size;
+    float world_x = camera->half_width - xoffset;
+    float world_y = camera->half_height - yoffset;
+
+    Tuple dummy = Point(world_x, world_y, -1);
+    Tuple o = Point(0, 0, 0);
+    Tuple *pixel = MultiplyMatrixByTuple(Inverse(camera->transform), &dummy);
+    Tuple *origin = MultiplyMatrixByTuple(Inverse(camera->transform), &o);
+    Tuple direction = Subtract(*pixel, *origin);
+    Normalize(&direction);
+    return Ray_(*origin, direction);
+}
+
+Canvas Render(Camera* camera, World* world)
+{
+    Canvas canvas = Canvas_(camera->hsize, camera->vsize);
+    for (int y = 0; y < camera->vsize; y++)
+    {
+        for (int x = 0; x < camera->hsize; x++)
+        {
+            Ray ray = RayForPixel(camera, x, y);
+            Color color = ColorAt(world, &ray);
+            WritePixel(&canvas, x, y, color);
+        }
+    }
+    return canvas;
+}
 
 # endif // SCENE_H

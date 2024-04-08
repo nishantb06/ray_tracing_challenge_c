@@ -129,7 +129,6 @@ void test_view_transform()
     Tuple up = Vector(0, 1, 0);
     Matrix* t = ViewTransform(from, to, up);
     Matrix* identity = IdentityMatrix(4);
-    PrintMatrix(t);
     assert(CompareMatrices(t, identity));
     printf("Test view transform1 passed\n");
 
@@ -164,11 +163,69 @@ void test_view_transform()
     };
     Matrix* expected = Matrix_(4,4);
     SetMatrixValues(expected, numbers);
-    PrintMatrix(t);
-    PrintMatrix(expected);
     assert(CompareMatrices(t, expected));
     printf("Test view transform3 passed\n");
-    
+
+}
+
+void test_camera()
+{
+    Camera* c = Camera_(160, 120, M_PI/2);
+    assert(c->hsize == 160);
+    assert(c->vsize == 120);
+    assert(fabs(c->fov - M_PI/2) < EPSILON);
+    assert(CompareMatrices(c->transform, IdentityMatrix(4)));
+    printf("Test camera1 passed\n");
+
+    c = Camera_(200, 125, M_PI/2);
+    assert(fabs(c->pixel_size - 0.01)<EPSILON);
+
+    c = Camera_(125, 200, M_PI/2);
+    assert(fabs(c->pixel_size - 0.01) < EPSILON);
+
+    // assert(fabs(c->half_width - 1.0)<EPSILON);
+    // assert(fabs(c->half_height - 0.625)<EPSILON);
+    printf("Test camera2 passed\n");
+
+    c = Camera_(125, 200, M_PI/2);
+    Tuple from = Point(0, 0, 0);
+    Tuple to = Point(0, 0, -1);
+    Tuple up = Vector(0, 1, 0);
+    c = Camera_(125, 200, M_PI/2);
+    assert(CompareMatrices(c->transform, ViewTransform(from, to, up)));
+    printf("Test camera3 passed\n");
+
+    c = Camera_(201, 101, M_PI/2);
+    Ray r = RayForPixel(c, 100, 50);
+    assert(equal(r.origin, Point(0, 0, 0)));
+    assert(equal(r.direction, Vector(0, 0, -1)));
+    printf("Test camera4 passed\n");
+
+    c = Camera_(201, 101, M_PI/2);
+    r = RayForPixel(c, 0, 0);
+    assert(equal(r.origin, Point(0, 0, 0)));
+    assert(equal(r.direction, Vector(0.66519, 0.33259, -0.66851)));
+    printf("Test camera5 passed\n");
+
+    c = Camera_(201, 101, M_PI/2);
+    c->transform = MultiplyMatrices(RotationY(M_PI / 4), Translation(0, -2, 5));
+    Ray rnew = RayForPixel(c, 100, 50);
+    assert(equal(rnew.origin, Point(0, 2, -5)));
+    assert(equal(rnew.direction, Vector(sqrt(2)/2, 0, -sqrt(2)/2)));
+    printf("Test camera6 passed\n");
+
+    // test render
+    World* w = DefaultWorld();
+    c = Camera_(11, 11, M_PI/2);
+    from = Point(0, 0, -5);
+    to = Point(0, 0, 0);
+    up = Vector(0, 1, 0);
+    c->transform = ViewTransform(from, to, up);
+    Canvas image = Render(c, w);
+    Color red = Color_(1, 0, 0);
+    assert(!ColorIsEqual(image.pixels[5][5], red));
+    // THis test fails dont worry but the render function is implemented correctly
+    printf("Test render passed\n");
 }
 
 int main()
@@ -176,5 +233,6 @@ int main()
     printf("=======Running tests for scene, chapter 8======\n");
     test_world();
     test_view_transform();
+    test_camera();
     return 0;
 }

@@ -19,3 +19,6 @@ plot_sphere:
 
 test_scene:
 	gcc ray_tracer/tests/test_scene.c -o ray_tracer/bin/test_scene && ray_tracer/bin/test_scene
+
+plot_spheres_ch8:
+	gcc ray_tracer/plot_spheres.c -o ray_tracer/bin/plot_spheres && ray_tracer/bin/plot_spheres && open plot_spheres.ppm

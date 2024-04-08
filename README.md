@@ -16,3 +16,7 @@ Implementation after chapter 7
 Sphere after applying scaling and shearing transformations
 <!-- ![Transformed Sphere](ray_tracer/pngs/sphere_transformed.png) -->
 <img src="ray_tracer/pngs/sphere_transformed.png" width="500">
+
+Implementation after chapter 8
+<img src="ray_tracer/pngs/plot_spheres_ch8.png" width="500">
+
