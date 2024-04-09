@@ -10,7 +10,6 @@
 #include <stdio.h>
 
 // global constants EPSILON
-#define EPSILON 0.00001
 
 //declare DeterminantNew function
 

@@ -126,9 +126,10 @@ typedef struct {
     Tuple eyev;
     Tuple normalv;
     bool inside;
+    Tuple over_point;
 } Computation;
 
-Computation* Computation_(int t, Sphere object, Tuple point, Tuple eyev, Tuple normalv, bool inside)
+Computation* Computation_(int t, Sphere object, Tuple point, Tuple eyev, Tuple normalv, bool inside, Tuple over_point)
 {
     Computation* comp = (Computation*)malloc(sizeof(Computation));
     comp->t = t;
@@ -137,9 +138,18 @@ Computation* Computation_(int t, Sphere object, Tuple point, Tuple eyev, Tuple n
     comp->eyev = eyev;
     comp->normalv = normalv;
     comp->inside = inside;
+    comp->over_point = over_point;
     return comp;
 }
 
+// The prepare_computations function should take an intersection and a ray as arguments, and return a
+// new computation object. The computation object should contain the following fields:
+// t: the value of t at the intersection
+// object: the object that was intersected
+// point: the point at which the intersection occurred
+// eyev: a vector pointing from the point of intersection back towards the eye
+// normalv: the normal vector at the point of intersection
+// inside: a boolean indicating if the intersection occurred from the inside of the object
 Computation *PrepareComputations(Intersection *intersection, Ray *ray)
 {
     Sphere object = intersection->object;
@@ -153,17 +163,41 @@ Computation *PrepareComputations(Intersection *intersection, Ray *ray)
         Negate(normalv);
         inside = true;
     }
-    return Computation_(intersection->t, object, point, eyev, *normalv, inside);
+    Tuple dummy = *normalv;
+    ScalerMultiply(&dummy, EPSILON);
+    Tuple over_point = Add(point, dummy);
+    return Computation_(intersection->t, object, point, eyev, *normalv, inside, over_point);
 }
 
+// given a point in the world, is_shadowed should return true if the point is in shadow
+bool IsShadowed(World *world, Tuple point)
+{
+    Tuple v = Subtract(world->lights->position, point);
+    float distance = Magnitude(&v);
+    Normalize(&v);
+    Ray r = Ray_(point, v);
+    Intersections *xs = IntersectWorld(world, &r);
+
+    Intersection *h = Hit(xs);
+
+    if (h != NULL && h->t < distance)
+    {
+        return true;
+    }
+    return false;
+}
+
+// The shade_hit function should calculate the color of a point in the world, taking into account the
+// lighting conditions at that point. The function should take a world and a computation as arguments
 Color ShadeHit(World *world, Computation *computation)
 {   
+    bool in_shadow = IsShadowed(world, computation->over_point);
     Color final_color = Color_(0, 0, 0);
     Color color = Color_(0, 0, 0);
     for (int i = 0; i < world->num_lights; i++)
     {
         Light light = world->lights[i];
-        color = Lighting(computation->object.material, &light, computation->point, computation->eyev, computation->normalv );
+        color = Lighting(computation->object.material, &light, computation->over_point, computation->eyev, computation->normalv,in_shadow);
         final_color = AddColor(final_color, color);
     }
     return final_color;
@@ -184,55 +218,6 @@ Color ColorAt(World *world, Ray *ray)
     Computation *computation = PrepareComputations(hit, ray);
     return ShadeHit(world, computation);
 }
-
-// typedef struct {
-//     int vsize;
-//     int hsize;
-//     float fov;
-//     Matrix* transform;
-//     World* world;
-// } Camera;
-
-// Camera* Camera_(int hsize, int vsize, float fov, World* world)
-// {
-//     Camera* camera = (Camera*)malloc(sizeof(Camera));
-//     camera->vsize = vsize;
-//     camera->hsize = hsize;
-//     camera->fov = fov;
-//     camera->world = world;
-//     return camera;
-// }
-
-// Ray RayForPixel(Camera* camera, int px, int py)
-// {
-//     float half_width = camera->vsize / 2;
-//     float half_height = camera->hsize / 2;
-//     float aspect = (float)camera->vsize / camera->hsize;
-//     float xoffset = (px + 0.5) * camera->fov / camera->vsize;
-//     float yoffset = (py + 0.5) * camera->fov / camera->hsize;
-//     float world_x = half_width - px;
-//     float world_y = half_height - py;
-//     Tuple pixel = Point(world_x, world_y, -1);
-//     Tuple origin = Point(0, 0, 0);
-//     Tuple direction =Subtract(pixel, origin);
-//     Normalize(&direction);
-//     return Ray_(origin, direction);
-// }
-
-// Canvas Render(Camera* camera)
-// {
-//     Canvas canvas = Canvas_(camera->vsize, camera->hsize);
-//     for (int y = 0; y < camera->hsize; y++)
-//     {
-//         for (int x = 0; x < camera->vsize; x++)
-//         {
-//             Ray ray = RayForPixel(camera, x, y);
-//             Color color = ColorAt(camera->world, &ray);
-//             WritePixel(&canvas, x, y, color);
-//         }
-//     }
-//     return canvas;
-// }
 
 typedef struct {
     int vsize;

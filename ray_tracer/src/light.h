@@ -55,7 +55,7 @@ Tuple Reflect(Tuple *in, Tuple *normal)
 // 3. the point on the object
 // 4. the eye vector
 // 5. the normal vector
-Color Lighting(Material* material, Light* light, Tuple position, Tuple eyev, Tuple normalv)
+Color Lighting(Material* material, Light* light, Tuple position, Tuple eyev, Tuple normalv, bool inShadow)
 {
     // combine the surface color with the light's color/intensity
     Color effective_color = MultiplyColor(material->color, light->intensity);
@@ -70,7 +70,7 @@ Color Lighting(Material* material, Light* light, Tuple position, Tuple eyev, Tup
     // light_dot_normal represents the cosine of the angle between the light vector and the normal vector.
     // A negative number means the light is on the other side of the surface.
     float light_dot_normal = DotProduct(&lightv, &normalv);
-    if (light_dot_normal < 0)
+    if (light_dot_normal < 0 || inShadow)
     {
         return ambient;
     }

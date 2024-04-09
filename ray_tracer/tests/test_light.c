@@ -9,6 +9,7 @@
 #include "../src/ray.h"
 #include "../src/light.h"
 #include "../src/canvas.h"
+#include "../src/scene.h"
 
 void test_light()
 {
@@ -26,35 +27,35 @@ void test_light()
     Tuple normal = Vector(0, 0, -1);
     Tuple light_position = Point(0, 0, -10);
     l = Light_(light_position, Color_(1, 1, 1));
-    Color result = Lighting(m, l, position, eye, normal);
+    Color result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(1.9, 1.9, 1.9)));
     printf("Test lighting1 passed\n");
 
     // eye between light and surface, eye offset 45 degrees
     eye = Vector(0, sqrt(2)/2, -sqrt(2)/2);
     normal = Vector(0, 0, -1);
-    result = Lighting(m, l, position, eye, normal);
+    result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(1.0, 1.0, 1.0)));
     printf("Test lighting2 passed\n");
     // light between eye and surface, eye offset 45 degrees
     eye = Vector(0, 0, -1);
     normal = Vector(0, 0, -1);
     l = Light_(Point(0, 10, -10), Color_(1, 1, 1));
-    result = Lighting(m, l, position, eye, normal);
+    result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(0.7364, 0.7364, 0.7364)));
     printf("Test lighting3 passed\n");
 
     // light between eye and surface, eye offset 45 degrees, light offset 45 degrees
     eye = Vector(0, sqrt(2)/2, -sqrt(2)/2);
     normal = Vector(0, 0, -1);
-    result = Lighting(m, l, position, eye, normal);
+    result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(0.7364, 0.7364, 0.7364)));
     printf("Test lighting4 passed\n");
 
     // eye in the path of the reflection vector
     eye = Vector(0, -sqrt(2)/2, -sqrt(2)/2);
     normal = Vector(0, 0, -1);
-    result = Lighting(m, l, position, eye, normal);
+    result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(1.6364, 1.6364, 1.6364)));
     printf("Test lighting5 passed\n");
 
@@ -62,7 +63,7 @@ void test_light()
     eye = Vector(0, 0, -1);
     normal = Vector(0, 0, -1);
     l = Light_(Point(0, 0, 10), Color_(1, 1, 1));
-    result = Lighting(m, l, position, eye, normal);
+    result = Lighting(m, l, position, eye, normal, false);
     assert(ColorIsEqual(result, Color_(0.1, 0.1, 0.1)));
     printf("Test lighting6 passed\n");
     

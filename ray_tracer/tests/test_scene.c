@@ -52,6 +52,7 @@ void test_world()
     assert(comps->object.id == i->object.id);
     assert(equal(comps->point, Point(0, 0, -1)));
     assert(equal(comps->eyev, Vector(0, 0, -1)));
+    PrintTuple(comps->normalv);
     assert(equal(comps->normalv, Vector(0, 0, -1)));
     printf("Test prepare computations passed\n");
 
@@ -228,11 +229,68 @@ void test_camera()
     printf("Test render passed\n");
 }
 
+void test_shadows()
+{
+    // lighting with the surface in shadow
+    Tuple eye = Vector(0, 0, -1);
+    Tuple normal = Vector(0, 0, -1);
+    Light* l = Light_(Point(0, 0, -10), Color_(1, 1, 1));
+    bool in_shadow = true;
+    Tuple position = Point(0, 0, 0);
+    Material* m = DefaultMaterial();
+    Color result = Lighting(m, l, position, eye, normal, in_shadow);
+    assert(ColorIsEqual(result, Color_(0.1, 0.1, 0.1)));
+    printf("Test lighting shadow 1 passed\n");
+
+    World *w = DefaultWorld();
+    Tuple p = Point(0, 10, 0);
+    assert(!IsShadowed(w, p));
+    printf("Test shadow1 passed\n");
+    p = Point(10, -10, 10);
+    assert(IsShadowed(w, p));
+    printf("Test shadow2 passed\n");
+    p = Point(-20, 20, -20);
+    assert(!IsShadowed(w, p));
+    printf("Test shadow3 passed\n");
+    p = Point(-2, 2, -2);
+    assert(!IsShadowed(w, p));
+    printf("Test shadow4 passed\n");
+    printf("Test shadow passed\n");
+
+    // shade hit is given an intersection in shadow
+    w = World_();
+    w->num_lights = 1;
+    w->lights[0] = *Light_(Point(0, 0, -10), Color_(1, 1, 1));
+    Sphere s1 = Sphere_(1, 1);
+    Sphere s2 = Sphere_(1, 2);
+    SetTransform(&s2, Translation(0, 0, 10));
+    AddObject(w, s1);
+    AddObject(w, s2);
+    Ray r = Ray_(Point(0, 0, 5), Vector(0, 0, 1));
+    Intersection* i = Intersection_(4, s2);
+    Computation* comps = PrepareComputations(i, &r);
+    Color c = ShadeHit(w, comps);
+    assert(ColorIsEqual(c, Color_(0.1, 0.1, 0.1)));
+    printf("Test shade hit is given an intersection in shadow passed\n");
+
+    // the hit should offset the point
+    Ray r1 = Ray_(Point(0, 0, -5), Vector(0, 0, 1));
+    Sphere s = Sphere_(1, 1);
+    SetTransform(&s, Translation(0, 0, 1));
+    Intersection* i1 = Intersection_(5, s);
+    Computation* comps1 = PrepareComputations(i1, &r1);
+    assert(comps1->over_point.z < -EPSILON/2);
+    assert(comps1->point.z > comps1->over_point.z);
+    printf("Test hit should offset the point passed\n");
+
+}
+
 int main()
 {
     printf("=======Running tests for scene, chapter 8======\n");
     test_world();
     test_view_transform();
     test_camera();
+    test_shadows();
     return 0;
 }
