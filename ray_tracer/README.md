@@ -14,6 +14,7 @@
 - Makefile to run tests , Done
 - and sync that with github actions
 - comments for important function, about what they return and accept as arguments
+- install and learn how to debug with [gdb](https://dev.to/jasonelwood/setup-gdb-on-macos-in-2020-489k)
 
 
 -------
