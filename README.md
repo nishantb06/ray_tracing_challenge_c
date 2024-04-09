@@ -18,5 +18,6 @@ Sphere after applying scaling and shearing transformations
 <img src="ray_tracer/pngs/sphere_transformed.png" width="500">
 
 Implementation after chapter 8
-<img src="ray_tracer/pngs/plot_spheres_ch8.png" width="500">
+
+<img src="ray_tracer/pngs/plot_spheres_ch8.png" width="1000">
 
