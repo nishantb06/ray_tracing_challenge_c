@@ -51,6 +51,13 @@ void AddObject(World* world, Sphere object)
     world->objects[world->num_objects - 1] = object;
 }
 
+void AddLight(World* world, Light light)
+{
+    world->num_lights++;
+    world->lights = (Light*)realloc(world->lights, world->num_lights * sizeof(Light));
+    world->lights[world->num_lights - 1] = light;
+}
+
 // Comparator function for qsort
 int compareIntersections(const void *a, const void *b)
 {
@@ -164,7 +171,7 @@ Computation *PrepareComputations(Intersection *intersection, Ray *ray)
         inside = true;
     }
     Tuple dummy = *normalv;
-    ScalerMultiply(&dummy, EPSILON);
+    ScalerMultiply(&dummy, EPSILON3);
     Tuple over_point = Add(point, dummy);
     return Computation_(intersection->t, object, point, eyev, *normalv, inside, over_point);
 }

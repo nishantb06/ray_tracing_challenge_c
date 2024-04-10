@@ -9,7 +9,7 @@
 #include "string.h"
 #include <stdio.h>
 
-// global constants EPSILON
+const float EPSILON = 0.00001;
 
 //declare DeterminantNew function
 

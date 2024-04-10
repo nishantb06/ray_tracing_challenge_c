@@ -4,7 +4,8 @@ tests:
 	gcc ray_tracer/tests/test_matrix.c -o ray_tracer/bin/test_matrix
 	gcc ray_tracer/tests/test_transformation.c -o ray_tracer/bin/test_transformation
 	gcc ray_tracer/tests/test_ray.c -o ray_tracer/bin/test_ray
-	gcc ray_tracer/tests/test_light.c -o ray_tracer/bin/test_light  
+	gcc ray_tracer/tests/test_light.c -o ray_tracer/bin/test_light
+	gcc -g ray_tracer/tests/test_scene.c -o ray_tracer/bin/test_scene
 
 run_tests:
 	./ray_tracer/bin/test_tuple
@@ -13,6 +14,7 @@ run_tests:
 	./ray_tracer/bin/test_transformation
 	./ray_tracer/bin/test_ray
 	./ray_tracer/bin/test_light
+	./ray_tracer/bin/test_scene
 
 plot_sphere:
 	gcc ray_tracer/plot_sphere.c -o ray_tracer/bin/plot_sphere && ./ray_tracer/bin/plot_sphere 

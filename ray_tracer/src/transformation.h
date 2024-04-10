@@ -5,6 +5,7 @@
 # include "tuple.h"
 
 # define EPSILON 0.000001
+# define EPSILON3 0.005
 
 Matrix* Translation(float x, float y, float z);
 Matrix* Scaling(float x, float y, float z);

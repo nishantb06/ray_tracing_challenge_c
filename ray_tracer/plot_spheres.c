@@ -57,8 +57,7 @@ int main()
     AddObject(w, middle);
     AddObject(w, right);
     AddObject(w, left);
-    w->num_lights = 1;
-    w->lights = light;
+    AddLight(w, *light);
     
     // camera
     Camera* camera = Camera_(1000, 500, M_PI/3);

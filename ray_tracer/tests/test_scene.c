@@ -259,8 +259,9 @@ void test_shadows()
 
     // shade hit is given an intersection in shadow
     w = World_();
-    w->num_lights = 1;
-    w->lights[0] = *Light_(Point(0, 0, -10), Color_(1, 1, 1));
+    AddLight(w, *Light_(Point(0, 0, -10), Color_(1, 1, 1)));
+    // w->num_lights = 1;
+    // w->lights[0] = *Light_(Point(0, 0, -10), Color_(1, 1, 1));
     Sphere s1 = Sphere_(1, 1);
     Sphere s2 = Sphere_(1, 2);
     SetTransform(&s2, Translation(0, 0, 10));
